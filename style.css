@@ -1,0 +1,35 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    color: white;
+    background-color: rgb(39, 39, 39);
+}
+
+header {
+    text-align: center;
+}
+
+.container {
+    margin: 60 auto 0 auto;
+    text-align: center;
+}
+
+#input-section {
+    display:block;
+}
+
+#k-frame {
+    margin: 30px auto 30px auto;
+    width: 300px;
+    height: 300px;
+    display: none;
+}
+
+#k-name {
+    padding-top: 10px;
+    color: rgb(172, 184, 0);
+}
+
+#k-img {
+    margin: 0 auto 10px auto;
+}
