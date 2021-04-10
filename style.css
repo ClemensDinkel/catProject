@@ -33,3 +33,7 @@ header {
 #k-img {
     margin: 0 auto 10px auto;
 }
+
+#buttons {
+    display: none;
+}

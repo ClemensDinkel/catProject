@@ -18,6 +18,7 @@ class Cat {
     this._foodAvailable = false;
     this._meows = false;
     this._opionion = 6;
+    this._petted = false;
   }
 
   // called
@@ -43,18 +44,12 @@ class Cat {
   }
 
   meow() {
-    console.log("Cat says meoooow");
+    document.getElementById("meow").textContent = "Meooowww!"
     this._meows = false;
   }
 
   checkNeeds() {
-
   }
-
-  /*clearLoneliness() {
-    if (this._loneliness > 10) this._loneliness = 10;
-    else if (this._loneliness < 0) this._loneliness = 0;
-  }*/
 
   // player actions
   giveFood() {
@@ -62,24 +57,24 @@ class Cat {
   }
 
   pet() {
-    console.log("You pet your cat");
+    console.log(`You pet ${this._name}`);
     this.timePasses();
     this._loneliness -= 3;
     if (this._catBehaviour === "wantsToBeAlone") {
-      console.log("Cat is hissing");
+      console.log(`${this._name} is hissing`);
     } else if (this._catBehaviour === "wantsAttention") {
       this._happiness += 2;
-      console.log("Cat is purring like crazy");
+      console.log(`${this._name} is purring like crazy`);
     } else {
       this._happiness += 1;
-      console.log("Cat is purring");
+      console.log(`${this._name} is purring`);
     }
     this.clearHappiness();
     this.checkNeeds();
   }
 
   leaveAlone() {
-    console.log("cat is left alone");
+    console.log(`${this._name} is left alone`);
     this._loneliness += 1;
     this.timePasses();
     this.catTakesAction();
@@ -89,7 +84,7 @@ class Cat {
   // cat actions ()
 
   catTakesAction() {
-    console.log("cat takes action:");
+    console.log(`${this._name} takes action:`);
     if (this._foodAvaible) this.eat("fodder");
     else if (this._tiredness >= 8) this.sleep();
     else if (this._catBehaviour === "wantsToMurder") this.killMouse("for fun");
@@ -100,7 +95,7 @@ class Cat {
     }
   }
   eat(food) {
-    console.log("cat is eating");
+    console.log(`${this._name} is eating`);
     this.hunger -= 6;
     this.happiness += 2;
     this.clearHappiness();
@@ -108,7 +103,7 @@ class Cat {
   }
 
   killMouse(reason) {
-    console.log("cat is killing");
+    console.log(`${this._name} is killing`);
     if (reason === "for fun") {
       this._happiness += 4;
       this._catBehaviour = "normal";
@@ -118,19 +113,19 @@ class Cat {
   }
 
   sleep() {
-    console.log("cat is sleeping");
+    console.log(`${this._name} cat is sleeping`);
     this._tiredness -= 5;
     this._hunger += 3;
     this.clearTiredness();
   }
 
   doCatStuff() {
-    console.log("cat is just doing some cat stuff");
+    console.log(`${this._name} is just doing some cat stuff`);
     this._happiness += 1;
     this.clearHappiness();
   }
 
-  // cat random actions --- todo
+  // cat random actions
 
   changeBehaviour() {
     this._catBehaviour = this._catTagsList[
@@ -139,16 +134,17 @@ class Cat {
   }
 }
 
+// starting values
 const randomStartValue = () => {
   return Math.floor(Math.random() * (6 - 2) + 2);
 };
 
-//starting input
+// starting input
 const nameInput = document.getElementById("name-input");
 const nameKittenButton = document.getElementById("name-btn");
 
-//namingFunction
-const nameKitten = (e) => {
+// namingFunction
+function nameKitten () {
   // input and buttons
   const giveFoodButton = document.getElementById("give-food");
   const petButton = document.getElementById("pet");
@@ -172,10 +168,13 @@ const nameKitten = (e) => {
     kittyImage.src = `http://placekitten.com/${randpic}`
     kittyImage.setAttribute("width", "naturalWidth");
     kittyImage.setAttribute("height", "naturalHeight");
-
+    document.getElementById("buttons").style.display = "block";
+    
+    giveFoodButton.addEventListener("click", kitten.giveFood);
+    petButton.addEventListener("click", kitten.pet);
+    leaveAloneButton.addEventListener("click", kitten.leaveAlone);
     console.log(kitten)
   }
-  // to do buttons und texte auftauchen lassen, buttons wirkung, ...
 } 
 
 //events
@@ -184,13 +183,9 @@ nameInput.addEventListener("keyup", (e)=>{
     (e.keyCode === 13 ? nameKitten(e) : null);
 })
 
-const kitten = new Cat("Paws");
 
-
-
-
-
-/* testing
+/* //testing
+const kitten = new Cat("Muschi")
 console.log(kitten);
 kitten.leaveAlone();
 console.log(kitten);
