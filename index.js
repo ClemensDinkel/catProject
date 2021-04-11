@@ -6,6 +6,8 @@ class Cat {
     this._hunger = randomStartValue();
     this._loneliness = randomStartValue();
     this._happiness = randomStartValue();
+    this._outputs = document.getElementById("cat-reactions");
+    this._meowtput = document.getElementById("meow");
     this._catTagsList = [
       "normal",
       "wantsToMurder",
@@ -19,6 +21,12 @@ class Cat {
     this._meows = false;
     this._opionion = 6;
     this._petted = false;
+    this._leftAlone = false;
+    this._slept = false;
+    this._changedBehaviour = false;
+    this.pet = this.pet.bind(this);
+    this.leaveAlone = this.leaveAlone.bind(this);
+    this.giveFood = this.giveFood.bind(this);
   }
 
   // called
@@ -27,8 +35,6 @@ class Cat {
     this._hunger += 1;
     this._tiredness += 1;
     this._loneliness += 1;
-    if (this._catBehaviour === "wantsToBeAlone") this._happiness += 1;
-    else if (this._catBehaviour === "wantsAttention") this._happiness -= 1;
     this.clearHappiness();
     this.clearTiredness();
   }
@@ -44,16 +50,40 @@ class Cat {
   }
 
   meow() {
-    document.getElementById("meow").textContent = "Meooowww!"
-    this._meows = false;
+    this._meows ? this._meowtput.style.display = "block" : this._meowtput.style.display ="none";
   }
 
   checkNeeds() {
+    console.log(this)
+    if (this._tiredness > 8) {
+      this._meows = true;
+      this._happiness -= 1;
+    }
+    if (this._hunger >= 10) {
+      this._meows = true;
+    }
+    /* check for:
+    tiredness -> - happiness
+    hunger -> - happiness
+    loniliness + leftalone -> happiness
+
+    happiness -> opinion
+    
+    randomly changebehaviour (33%) if not changed
+    */
+    this.meow();
+    this._meows = false;
+    this._petted = false;
+    this._slept = false;
+    this._leftAlone = false;
+    this._changedBehaviour = false;
+    console.log(this)
   }
 
   // player actions
   giveFood() {
     this._foodAvailable = true;
+    console.log(this)
   }
 
   pet() {
@@ -64,19 +94,25 @@ class Cat {
       console.log(`${this._name} is hissing`);
     } else if (this._catBehaviour === "wantsAttention") {
       this._happiness += 2;
+      this.changeBehaviour();
+      this._changedBehaviour = true;
       console.log(`${this._name} is purring like crazy`);
     } else {
-      this._happiness += 1;
       console.log(`${this._name} is purring`);
+      if(randomInt(2) > 0) this._happiness += 1;
     }
+    this._petted = true;
     this.clearHappiness();
     this.checkNeeds();
   }
 
   leaveAlone() {
     console.log(`${this._name} is left alone`);
-    this._loneliness += 1;
     this.timePasses();
+    this._loneliness += 1;
+    if (this._catBehaviour === "wantsToBeAlone") this._happiness += 1;
+    else if (this._catBehaviour === "wantsAttention") this.happiness -=1;
+    this._leftAlone = true;
     this.catTakesAction();
     this.checkNeeds();
   }
@@ -85,43 +121,42 @@ class Cat {
 
   catTakesAction() {
     console.log(`${this._name} takes action:`);
-    if (this._foodAvaible) this.eat("fodder");
+    if (this._foodAvailable) this.eat("fodder");
     else if (this._tiredness >= 8) this.sleep();
     else if (this._catBehaviour === "wantsToMurder") this.killMouse("for fun");
     else {
-      let randomAction = Math.floor(Math.random() * 5);
-      if (randomAction >= 0) this.doCatStuff();
-      else this.killMouse("because of reasons");
+      Math.floor(randomInt(5)) > 0 ? this.doCatStuff() : this.killMouse("because of reasons")
     }
   }
   eat(food) {
     console.log(`${this._name} is eating`);
-    this.hunger -= 6;
-    this.happiness += 2;
+    this._hunger -= 6;
+    this._happiness += 1;
     this.clearHappiness();
-    if (food === "fodder") this._foodAvaible = false;
+    if (food === "fodder") this._foodAvailable = false;
   }
 
   killMouse(reason) {
-    console.log(`${this._name} is killing`);
+    console.log(`${this._name} is killing ${reason}`);
     if (reason === "for fun") {
-      this._happiness += 4;
-      this._catBehaviour = "normal";
-    } else this._happiness += 2;
+      this._happiness += 3;
+      this.changeBehaviour();
+    } else this._happiness += 1;
     if (this._hunger >= 6) this.eat("mouse");
     this.clearHappiness();
   }
 
   sleep() {
-    console.log(`${this._name} cat is sleeping`);
-    this._tiredness -= 5;
+    console.log(`${this._name} is sleeping`);
+    this._tiredness -= 4;
     this._hunger += 3;
     this.clearTiredness();
+    this._slept = true;
   }
 
   doCatStuff() {
     console.log(`${this._name} is just doing some cat stuff`);
-    this._happiness += 1;
+    if (randomInt(2) > 0) this._happiness += 1;
     this.clearHappiness();
   }
 
@@ -134,10 +169,9 @@ class Cat {
   }
 }
 
-// starting values
-const randomStartValue = () => {
-  return Math.floor(Math.random() * (6 - 2) + 2);
-};
+// maths
+const randomInt = max => Math.floor(Math.random()*max);  
+const randomStartValue = () => Math.floor(Math.random() * (6 - 2) + 2);
 
 // starting input
 const nameInput = document.getElementById("name-input");
@@ -164,7 +198,7 @@ function nameKitten () {
     nameInput.style.display = "none";
     nameKittenButton.style.display = "none";
     kittyFrame.style.display = "block"
-    let randpic = Math.floor(Math.random() * (250 - 150) + 150) + "/" + Math.floor(Math.random() * (250 - 150) + 150);
+    let randpic = Math.floor(Math.random() * (300 - 200) + 200) + "/" + Math.floor(Math.random() * (250 - 150) + 150);
     kittyImage.src = `http://placekitten.com/${randpic}`
     kittyImage.setAttribute("width", "naturalWidth");
     kittyImage.setAttribute("height", "naturalHeight");
@@ -177,14 +211,14 @@ function nameKitten () {
   }
 } 
 
-//events
+//naming events
 nameKittenButton.addEventListener("click", nameKitten);
 nameInput.addEventListener("keyup", (e)=>{
-    (e.keyCode === 13 ? nameKitten(e) : null);
+    (e.key === "Enter" ? nameKitten(e) : null);
 })
 
-
-/* //testing
+/*
+//testing
 const kitten = new Cat("Muschi")
 console.log(kitten);
 kitten.leaveAlone();

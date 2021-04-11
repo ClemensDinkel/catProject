@@ -20,8 +20,6 @@ header {
 
 #k-frame {
     margin: 30px auto 30px auto;
-    width: 300px;
-    height: 300px;
     display: none;
 }
 
@@ -35,5 +33,9 @@ header {
 }
 
 #buttons {
+    display: none;
+}
+
+#meow {
     display: none;
 }
