@@ -3,6 +3,8 @@ html, body {
     padding: 0;
     color: white;
     background-color: rgb(39, 39, 39);
+    display: flex;
+    justify-content: space-around;
 }
 
 header {
@@ -25,7 +27,7 @@ header {
 
 #k-name {
     padding-top: 10px;
-    color: rgb(172, 184, 0);
+    color: rgb(255, 192, 0);
 }
 
 #k-img {
@@ -36,6 +38,19 @@ header {
     display: none;
 }
 
+#start-new {
+    display: none;
+    margin: 0 auto 0 auto;
+}
+
 #meow {
     display: none;
+}
+
+#instructions {
+    display: none;
+    text-align: justify;
+    left: 0;
+    max-width: 30%;
+
 }

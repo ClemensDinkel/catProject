@@ -5,7 +5,7 @@ class Cat {
     this._tiredness = randomStartValue();
     this._hunger = randomStartValue();
     this._loneliness = randomStartValue();
-    this._happiness = randomStartValue();
+    this._happiness = 6;
     this._outputs = document.getElementById("cat-reactions");
     this._meowtput = document.getElementById("meow");
     this._catTagsList = [
@@ -20,18 +20,29 @@ class Cat {
     this._foodAvailable = false;
     this._meows = false;
     this._petted = false;
-    this._leftAlone = false;
     this._slept = false;
     this._killed = false;
     this._changedBehaviour = false;
+    this._opinion = 7;
     this.pet = this.pet.bind(this);
     this.leaveAlone = this.leaveAlone.bind(this);
     this.giveFood = this.giveFood.bind(this);
-    this._opinion = 6;
-    this._moodcolor = "FFC000";
+    
   }
 
-  // called functions
+  // called methods
+  addOutput(string) {
+    let newP = document.createElement("p");
+    newP.innerText = `${string}`;
+    this._outputs.appendChild(newP)
+  }
+
+  clearOutput() {
+    while (this._outputs.firstChild) {
+      this._outputs.removeChild(this._outputs.lastChild);
+    }
+  }
+  
   timePasses() {
     console.log("time is passing");
     this._hunger += 1;
@@ -77,7 +88,7 @@ class Cat {
         this.decreaseHappiness(1);
       } else if (this._hunger < 0) {
         this.decreaseHappiness(1);
-        console.log(`${this._name} is overfed and threw up!`)
+        this.addOutput(`${this._name} is overfed and threw up!`)
         this._hunger += 5;
       }
 
@@ -86,7 +97,7 @@ class Cat {
       } else if (this._loneliness < 3 && this._petted && cb === "wantsToBeAlone") {
         this.decreaseHappiness(1);
       }
-
+      
       this.clearHappiness();
       
     }
@@ -95,8 +106,16 @@ class Cat {
       if (this._happiness > 10) this._opinion++;
         else if (this._happiness < 5) this._opinion--;
         
-        if (this._opinion >= 15) console.log(`${this._name} wants to stay with you forever! That's good, isn't it? You won.`);
-        else if (this._opinion <= 0) console.log(`${this._name} out of desperation mistook you for a mouse and killed you in your sleep. That's bad. You lost.`)
+        if (this._opinion >= 15) {
+          this.clearOutput();
+          this.addOutput(`${this._name} wants to stay with you forever! That's good, isn't it? You won.`);
+          this.endGame();
+        }
+        else if (this._opinion <= 0) {
+          this.clearOutput();
+          this.addOutput(`${this._name} out of desperation mistook you for a mouse and killed you in your sleep. That's bad. You lost.`)
+          this.endGame();
+        }
       }
     
     // kitten can randomly change behaviour if change wasn't forced.
@@ -106,53 +125,53 @@ class Cat {
     let nameP = document.getElementById("k-name");
     switch (this._happiness) {
       case 0: 
-      this._moodcolor = "FF0000";
+      nameP.style.color = "rgb(255,0,0)"
       break;
       case 1: 
-      this._moodcolor = "FF2000";
+      nameP.style.color = "rgb(255,32,0)"
       break;
       case 2: 
-      this._moodcolor = "FF4000";
+      nameP.style.color = "rgb(255,64,0)"
       break;
       case 3: 
-      this._moodcolor = "FF6000";
+      nameP.style.color = "rgb(255,96,0)"
       break;
       case 4: 
-      this._moodcolor = "FF8000";
+      nameP.style.color = "rgb(255,128,0)"
       break;
       case 5: 
-      this._moodcolor = "FFA000";
+      nameP.style.color = "rgb(255,160,0)"
       break;
       case 6: 
-      this._moodcolor = "FFC000";
+      nameP.style.color = "rgb(255,192,0)"
       break;
       case 7: 
-      this._moodcolor = "FFE000";
+      nameP.style.color = "rgb(255,224,0)"
       break;
       case 8: 
-      this._moodcolor = "E0FF00";
+      nameP.style.color = "rgb(224,255,0)"
       break;
       case 9: 
-      this._moodcolor = "C0FF00";
+      nameP.style.color = "rgb(192,255,0)"
       break;
       case 10: 
-      this._moodcolor = "A0FF00";
+      nameP.style.color = "rgb(160,255,0)"
       break;
       case 11: 
-      this._moodcolor = "80FF00";
+      nameP.style.color = "rgb(128,255,0)"
       break;
       case 12: 
-      this._moodcolor = "60FF00";
+      nameP.style.color = "rgb(96,255,0)"
       break;
       case 13: 
-      this._moodcolor = "40FF00";
+      nameP.style.color = "rgb(64,255,0)"
       break;
       case 14: 
-      this._moodcolor = "20FF00";
+      nameP.style.color = "rgb(32,255,0)"
       break;
-      default: this._moodcolor = "00FF00";
+      case 15:
+      nameP.style.color = "rgb(0,255,0)"
     }
-    nameP.style.color = this._moodcolor;
 
     this.meow();
     this._meows = false;
@@ -160,30 +179,42 @@ class Cat {
     this._slept = false;
     this._leftAlone = false;
     this._changedBehaviour = false;
-    console.log(this)
+  }
+
+  endGame() {
+    console.log("the end")
+    document.getElementById("start-new").style.display = "block";
+    document.getElementById("give-food").style.display = "none";
+    document.getElementById("pet").style.display = "none";
+    document.getElementById("leave-alone").style.display = "none";
+  }
+
+  newGame() {
+    location.reload();
   }
 
   // player actions
   giveFood() {
     this._foodAvailable = true;
-    console.log(this)
+    document.getElementById("give-food").disabled = true;
   }
 
   pet() {
-    console.log(`You pet ${this._name}`);
+    this.clearOutput();
+    this.addOutput(`You pet ${this._name}`)
     this.timePasses();
     this._loneliness -= 4;
     if (this._catBehaviour === "wantsToBeAlone") {
-      console.log(`${this._name} is hissing`);
-      if(randomInt(2) > 0) this.decreaseHappiness(1)
+      this.addOutput(`${this._name} is hissing`);
+      if(randomInt(2) === 0) this.decreaseHappiness(1)
     } else if (this._catBehaviour === "wantsAttention") {
       this.increaseHappiness(1)
       this.changeBehaviour();
       this._changedBehaviour = true;
-      console.log(`${this._name} is purring like crazy`);
+      this.addOutput(`${this._name} is purring like crazy`);
     } else {
-      console.log(`${this._name} is purring`);
-      if(randomInt(2) > 0) this.increaseHappiness(1);
+      this.addOutput(`${this._name} is purring`);
+      if(randomInt(2) === 0) this.increaseHappiness(1);
     }
     this._petted = true;
     this.clearHappiness();
@@ -191,12 +222,14 @@ class Cat {
   }
 
   leaveAlone() {
-    console.log(`${this._name} is left alone`);
+    this.clearOutput();
+    this.addOutput(`${this._name} is left alone`);
     this.timePasses();
     this._loneliness += 1;
-    if (this._catBehaviour === "wantsToBeAlone") this._happiness += 1;
-    else if (this._catBehaviour === "wantsAttention") this.happiness -=1;
-    this._leftAlone = true;
+    if (this._catBehaviour === "wantsToBeAlone") {
+      if(randomInt(3) === 0) this.increaseHappiness(1);
+    }
+    else if (this._catBehaviour === "wantsAttention") this.decreaseHappiness(1);
     this.catTakesAction();
     this.checkNeeds();
   }
@@ -204,7 +237,6 @@ class Cat {
   // cat actions
 
   catTakesAction() {
-    console.log(`${this._name} takes action:`);
     if (this._foodAvailable) this.eat("fodder");
     else if (this._tiredness >= 8) this.sleep();
     else if (this._catBehaviour === "wantsToMurder") this.killMouse("out of bloodlust");
@@ -213,17 +245,21 @@ class Cat {
     }
   }
   eat(food) {
-    console.log(`${this._name} is eating`);
+    this.addOutput(`${this._name} is eating`);
     this._hunger -= 5;
     this.increaseHappiness(1);
     this.clearHappiness();
-    if (food === "fodder") this._foodAvailable = false;
+    if (food === "fodder") {
+      this._foodAvailable = false;
+      document.getElementById("give-food").disabled = false;
+    }
   }
 
   killMouse(reason) {
-    console.log(`${this._name} is killing ${reason}`);
+    this.addOutput(`${this._name} is killing ${reason}`);
     if (reason === "out of bloodlust") {
-      this.increaseHappiness(2);
+      this.increaseHappiness(1);
+      if(randomInt(2) === 0) this.increaseHappiness(1);
       this.changeBehaviour();
       this._changedBehaviour = true;
     } else this.increaseHappiness(1);
@@ -232,7 +268,7 @@ class Cat {
   }
 
   sleep() {
-    console.log(`${this._name} is sleeping`);
+    this.addOutput(`${this._name} is sleeping`);
     this._tiredness -= 5;
     this._hunger += 3;
     this.clearTiredness();
@@ -240,7 +276,7 @@ class Cat {
   }
 
   doCatStuff() {
-    console.log(`${this._name} is just doing some cat stuff`);
+    this.addOutput(`${this._name} is just doing some cat stuff`);
     if (randomInt(2) > 0) this.increaseHappiness(1);
     this.clearHappiness();
   }
@@ -268,6 +304,7 @@ function nameKitten () {
   const giveFoodButton = document.getElementById("give-food");
   const petButton = document.getElementById("pet");
   const leaveAloneButton = document.getElementById("leave-alone");
+  const newGameButton = document.getElementById("start-new");
   // the kitten section
   const kittyFrame = document.getElementById("k-frame");
   const kittyName = document.getElementById("k-name");
@@ -275,6 +312,7 @@ function nameKitten () {
   // assignments
 
   if (nameInput.value != "") {
+    //create object and change display of page
     kittyName.textContent = nameInput.value;
     const kitten = new Cat(nameInput.value);
     nameInput.style.display = "none";
@@ -285,10 +323,11 @@ function nameKitten () {
     kittyImage.setAttribute("width", "naturalWidth");
     kittyImage.setAttribute("height", "naturalHeight");
     document.getElementById("buttons").style.display = "block";
-    
+    document.getElementById("instructions").style.display = "block"
     giveFoodButton.addEventListener("click", kitten.giveFood);
     petButton.addEventListener("click", kitten.pet);
     leaveAloneButton.addEventListener("click", kitten.leaveAlone);
+    newGameButton.addEventListener("click", kitten.newGame)
     console.log(kitten)
   }
 } 
@@ -298,7 +337,3 @@ nameKittenButton.addEventListener("click", nameKitten);
 nameInput.addEventListener("keyup", (e)=>{
     (e.key === "Enter" ? nameKitten(e) : null);
 })
-
-
-//nerf leave alone
-//color isn't working

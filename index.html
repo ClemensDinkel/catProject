@@ -8,26 +8,50 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <header>
-        <h1>Care for me!</h1>
-    </header>
-    <div class="container">
-        <p>A little kitten has fallen into your hands and wants to be cared for. </p>
-        <div id="input-section">
-            <input type="text" id="name-input" name="name-input" placeholder="Name your kitten">
-            <button id="name-btn">Confirm name</button>
+    <main>
+        <header>
+            <h1>Care for me!</h1>
+        </header>
+        <div class="container">
+            <p>A little kitten has fallen into your hands and wants to be cared for. </p>
+            <div id="input-section">
+                <input type="text" id="name-input" name="name-input" placeholder="Name your kitten">
+                <button id="name-btn">Confirm name</button>
+            </div>
+            <div id="k-frame">
+                <h2 id="k-name">Kitten's name</h2>
+                <img id="k-img" src="">
+            </div>
+            <div id="buttons">
+                <button id="give-food">Give Food</button>
+                <button id="pet">Pet</button>
+                <button id="leave-alone">Leave alone</button>
+            </div>
+            <button id="start-new">Start new game</button>
+            <div id="cat-reactions"></div>
+            <p id="meow">Meoooow!</p>
         </div>
-        <div id="k-frame">
-            <h2 id="k-name">Kitten's name</h2>
-            <img id="k-img" src="">
-        </div>
-        <div id="buttons">
-            <button id="give-food">Give Food</button>
-            <button id="pet">Pet</button>
-            <button id="leave-alone">Leave alone</button>
-        </div>
-        <div id="cat-reactions"></div>
-        <p id="meow">Meoooow!</p>
+    </main>
+    <div id="instructions">
+        <p>Instructions:</p>
+        <p>Your job is to make and keep your kitten happy. If keep your kitten happy for enough turns, you will win the game. If you keep your kitten unhappy for too long, you will lose.</p>
+        <p>The happiness of your kitten is determined by other values like tiredness, hunger and loneliness. Some player and cat actions also can directly affect happiness. Your kitten regularly changes it's behaviour which makes it difficult to predict what it wants. Keep you kitten's values in the balance and watch out for it's behaviour. If something is wrong your kitten will tell you with a "meow". This can of course mean many things:</p>
+        <ul>
+            <li>I'm tired and need to sleep.</li>
+            <li>I'm hungry.</li>
+            <li>I ate too much.</li>
+            <li>I want your attention.</li>
+            <li>I don't want your attention.</li>
+        </ul>
+        <p>Your available actions are:</p>
+        <p>GiveFood - This is not considered a real player action, you only provide food, that your kitten will eat when left alone. No time passes and no happiness is calculated.</p>
+        <p>Pet and Leave alone are considered player actions, that will cause</p>
+        <ul>
+            <li>time to pass (changing values like hunger and tiredness). Do this regularly, but not too often.</li>
+            <li>you to pet your kitten or your kitten to chose an action by its own</li>
+            <li>happiness and the kitten's opinion to be calculated</li>
+            <li>your kitten's behaviour change randomly by a certain chance - remember cats are crazy!</li>
+        </ul>
     </div>
 
     <script src="index.js"></script>
